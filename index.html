@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NULL THE YEEP</title>
+<meta name="description" content="low signal. high yeep.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #14111f;
+    --void-alt: #1c1830;
+    --text: #f1eef7;
+    --muted: #8a83a3;
+    --cyan: #4dd9ff;
+    --magenta: #ff4db8;
+    --line: #2c2645;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: radial-gradient(ellipse at top, #1a1530, var(--void) 60%);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* scanline overlay */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    mix-blend-mode: overlay;
+  }
+
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  a { color: var(--cyan); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+  }
+
+  /* hero */
+  .hero {
+    min-height: 78vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+
+  .glitch-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.8rem, 7.5vw, 3.6rem);
+    color: var(--text);
+    position: relative;
+    display: inline-block;
+    line-height: 1.4;
+    margin: 0;
+  }
+  .glitch-title::before,
+  .glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    color: inherit;
+  }
+  .glitch-title::before {
+    color: var(--cyan);
+    transform: translate(-2px, -1px);
+    mix-blend-mode: screen;
+    opacity: 0.85;
+    animation: glitchA 6s infinite;
+  }
+  .glitch-title::after {
+    color: var(--magenta);
+    transform: translate(2px, 1px);
+    mix-blend-mode: screen;
+    opacity: 0.85;
+    animation: glitchB 6s infinite;
+  }
+  @keyframes glitchA {
+    0%, 92%, 100% { clip-path: inset(0 0 0 0); transform: translate(-2px,-1px); }
+    93% { clip-path: inset(10% 0 60% 0); transform: translate(-6px,-2px); }
+    95% { clip-path: inset(60% 0 5% 0); transform: translate(-3px,2px); }
+    97% { clip-path: inset(20% 0 40% 0); transform: translate(-5px,-1px); }
+  }
+  @keyframes glitchB {
+    0%, 91%, 100% { clip-path: inset(0 0 0 0); transform: translate(2px,1px); }
+    92% { clip-path: inset(40% 0 20% 0); transform: translate(5px,2px); }
+    94% { clip-path: inset(5% 0 70% 0); transform: translate(3px,-2px); }
+    98% { clip-path: inset(55% 0 10% 0); transform: translate(6px,1px); }
+  }
+
+  .tagline {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    margin: 18px 0 36px;
+  }
+
+  .sub-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    color: var(--void);
+    background: var(--text);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 3px 3px 0 var(--cyan), 6px 6px 0 var(--magenta);
+  }
+  .sub-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--cyan), 9px 9px 0 var(--magenta);
+  }
+
+  /* section label */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* transmissions grid */
+  section { padding: 50px 0; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--void-alt);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+  }
+
+  .thumb {
+    aspect-ratio: 16 / 9;
+    background: repeating-linear-gradient(
+      135deg,
+      #241f3d 0px, #241f3d 10px,
+      #1c1830 10px, #1c1830 20px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .thumb::before {
+    content: '▶';
+    color: var(--text);
+    font-size: 1.4rem;
+    opacity: 0.7;
+  }
+  .thumb .rec {
+    position: absolute;
+    top: 8px; left: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--magenta);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .thumb .rec::before {
+    content: '●';
+    font-size: 0.6rem;
+  }
+
+  .card-meta {
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* socials */
+  .social-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .social-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    border: 1px solid var(--line);
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .social-pill:hover {
+    border-color: var(--magenta);
+    color: var(--magenta);
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0 50px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--cyan); }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero { min-height: 60vh; padding: 50px 0 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch-title::before, .glitch-title::after { animation: none; opacity: 0; }
+    .card, .sub-btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="wrap">
+
+    <div class="hero">
+      <h1 class="glitch-title" data-text="NULL THE YEEP">NULL THE YEEP</h1>
+      <p class="tagline">low signal. high yeep.</p>
+      <a class="sub-btn" href="https://www.youtube.com/@NullTheYeep" target="_blank" rel="noopener">▶ SUBSCRIBE</a>
+    </div>
+
+    <section>
+      <div class="section-label">latest transmissions</div>
+      <div class="grid">
+        <a class="card" href="#">
+          <div class="thumb"><span class="rec">REC</span></div>
+          <div class="card-meta">yeep_clip_01.mov</div>
+        </a>
+        <a class="card" href="#">
+          <div class="thumb"><span class="rec">REC</span></div>
+          <div class="card-meta">static &amp; friends</div>
+        </a>
+        <a class="card" href="#">
+          <div class="thumb"><span class="rec">REC</span></div>
+          <div class="card-meta">[REDACTED] gameplay</div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">find the signal elsewhere</div>
+      <div class="social-row">
+        <a class="social-pill" href="#">Discord</a>
+        <a class="social-pill" href="#">Twitch</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>transmission ends. no signal detected.</span>
+      <a href="https://www.youtube.com/@NullTheYeep" target="_blank" rel="noopener">subscribe →</a>
+    </footer>
+
+  </div>
+</body>
+</html>
